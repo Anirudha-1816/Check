@@ -99,7 +99,7 @@ export const logInUser = async (req, res) => {
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     res.cookie("token", token, {
@@ -113,7 +113,6 @@ export const logInUser = async (req, res) => {
       success: true,
       message: "Login Successful",
     });
-
   } catch (err) {
     console.log(err);
 
@@ -124,18 +123,14 @@ export const logInUser = async (req, res) => {
   }
 };
 
-
-
-
-
 export const passwordReset = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
 
     // Find logged-in user
-   const user = await User.findOne({
-  email: req.user.email,
-});
+    const user = await User.findOne({
+      email: req.user.email,
+    });
 
     if (!user) {
       return res.status(404).json({
@@ -145,10 +140,7 @@ export const passwordReset = async (req, res) => {
     }
 
     // Compare old password
-    const isMatch = await bcrypt.compare(
-      oldPassword,
-      user.password
-    );
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
 
     if (!isMatch) {
       return res.status(401).json({
@@ -160,10 +152,7 @@ export const passwordReset = async (req, res) => {
     // Hash new password
     const salt = await bcrypt.genSalt(10);
 
-    const hashedPassword = await bcrypt.hash(
-      newPassword,
-      salt
-    );
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
 
     // Save new password
     user.password = hashedPassword;
@@ -174,7 +163,6 @@ export const passwordReset = async (req, res) => {
       success: true,
       message: "Password changed successfully",
     });
-
   } catch (err) {
     return res.status(500).json({
       success: false,
@@ -182,4 +170,3 @@ export const passwordReset = async (req, res) => {
     });
   }
 };
-

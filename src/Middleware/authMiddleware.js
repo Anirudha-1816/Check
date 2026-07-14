@@ -8,15 +8,12 @@ const checkForAuth = (req, res, next) => {
     const token = req.cookies.token;
 
     if (!token) {
-     
       const error = {
         message: "Not valid user",
-        status : statusCodes.NOT_FOUND,
-        extraDetails : "login please" 
-
-      }
-      return next(error)
-      
+        status: statusCodes.NOT_FOUND,
+        extraDetails: "login please",
+      };
+      return next(error);
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -24,9 +21,7 @@ const checkForAuth = (req, res, next) => {
     req.user = decoded;
 
     next();
-
   } catch (err) {
-
     return res.status(401).json({
       success: false,
       message: "Invalid or Expired Token",
